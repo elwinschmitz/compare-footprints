@@ -216,3 +216,14 @@ these quantities.
 - No implementation is considered finished merely because the tiny bars look
   larger: quantity transparency and truthful proportions take priority.
 
+---
+
+## Second pass, feedback on initial implementation
+
+- No need for the double header headline component. Remove the top-most part. Keep the 'tagline', use it in the footer.
+- Make the Design for mobile first and single column only. No need for layout changes on wider viewports, like for example the thing in the footer that it gets columns all of a sudden.
+- Use normal body-sized text (at least 1rem) for chart labels, quantities, values,
+  notes, table content and footer copy. Supporting information should not look
+  like fine print; distinguish it through spacing, weight and colour instead.
+- Footer tagline: "An order-of-magnitude comparison. Perspective, not precision."
+

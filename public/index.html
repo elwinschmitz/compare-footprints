@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An order-of-magnitude comparison of the carbon footprints of travel, food and digital activities, with transparent quantities and the full report data.">
+  <title>Compare footprints — Everyday activities &amp; AI</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f6f6f3;
+      --surface: #ffffff;
+      --ink: #242637;
+      --muted: #606171;
+      --line: #dedee6;
+      --accent: #7960d9;
+      --link: #5840b2;
+      --tint: #f0ecfc;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.6;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    a { color: var(--link); text-underline-offset: .2em; }
+    a:hover { text-decoration-thickness: 2px; }
+    :focus-visible { outline: 3px solid var(--link); outline-offset: 4px; }
+    h1, h2, h3, p, figure { margin: 0; }
+    h1, h2, h3 { line-height: 1.15; text-wrap: balance; }
+    h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); letter-spacing: -.035em; }
+    h3 { font-size: 1.125rem; }
+    p + p { margin-top: 1rem; }
+    main, footer { width: min(1320px, calc(100% - 2rem)); margin-inline: auto; }
+    .hero { padding-block: 3rem; max-width: 860px; }
+    .eyebrow {
+      font-size: 1rem;
+      font-weight: 750;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: var(--link);
+      margin-bottom: 1rem;
+    }
+    h1 { font-size: clamp(2.5rem, 7vw, 5.5rem); letter-spacing: -.065em; overflow-wrap: anywhere; }
+    .intro { font-size: clamp(1.1rem, 2vw, 1.35rem); max-width: 680px; margin-top: 1.5rem; }
+    .hero-note { color: var(--muted); max-width: 650px; font-size: 1rem; }
+    .jump-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      font-weight: 650;
+    }
+    .chart-card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+    .chart-heading { padding: 2rem 1rem 1rem; }
+    .scale-tag { display: inline-block; margin-top: 1rem; padding: .3rem .8rem; border-radius: 999px; background: var(--tint); color: var(--link); font-size: 1rem; font-weight: 650; }
+    .chart-heading p { color: var(--muted); margin-top: .75rem; font-size: 1rem; }
+    .scroll-hint { color: var(--muted); font-size: 1rem; }
+    .chart-heading .scroll-hint { margin-top: .5rem; }
+    .scroll-region { overflow: auto; max-width: 100%; }
+    .scroll-region:focus-visible { outline-offset: -4px; }
+    .chart { min-width: 1120px; padding: 0 1rem 1rem; }
+    .chart-axis, .chart-row { display: grid; grid-template-columns: 260px minmax(700px, 1fr) 92px; gap: 0; }
+    .chart-axis { color: var(--muted); font-size: 1rem; padding-block: 1rem .5rem; }
+    .axis-ticks { position: relative; height: 1.5rem; margin-right: 1px; }
+    .axis-ticks span { position: absolute; transform: translateX(-50%); }
+    .axis-ticks span:first-child { transform: none; }
+    .axis-ticks span:last-child { transform: translateX(-100%); }
+    .axis-unit { text-align: right; }
+    .chart-list { list-style: none; padding: 0; margin: 0; }
+    .chart-row { min-height: 64px; }
+    .activity-link {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .55rem .8rem .55rem .2rem;
+      color: var(--ink);
+      text-decoration: none;
+      border-radius: 6px;
+      line-height: 1.3;
+    }
+    .activity-link:hover { background: var(--tint); }
+    .activity-link:hover .activity-name { text-decoration: underline; }
+    .emoji { min-width: 3rem; text-align: center; font-size: 1.4rem; }
+    .activity-name { font-size: 1rem; font-weight: 650; }
+    .quantity { display: block; font-size: 1rem; color: var(--muted); margin-top: .2rem; }
+    .track {
+      display: flex;
+      align-items: center;
+      border-right: 1px solid var(--line);
+      background: repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px 25%);
+    }
+    /* A 20 kg axis; endpoint rings locate tiny values without enlarging their bars. */
+    .bar { position: relative; width: calc(var(--grams) / 200 * 1%); height: 22px; background: var(--accent); border-radius: 0 4px 4px 0; }
+    .bar::after { content: ""; position: absolute; right: -3px; top: 8px; width: 6px; height: 6px; border: 1.5px solid var(--link); border-radius: 50%; background: var(--surface); }
+    .chart-value { position: relative; align-self: center; text-align: right; font-weight: 650; font-size: 1rem; font-variant-numeric: tabular-nums; }
+    figcaption { padding: 1.25rem 1rem 1.75rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 1rem; }
+    .marker-key { display: inline-block; width: 7px; height: 7px; border: 1.5px solid var(--link); border-radius: 50%; vertical-align: middle; }
+    .context-note { margin: 1.25rem 0 3.5rem; padding: 1.25rem 1rem; border-left: 3px solid var(--accent); font-size: 1rem; }
+    .context-note strong { color: var(--ink); }
+    .data-section { margin-bottom: 2rem; scroll-margin-top: 1.5rem; }
+    .data-section > p { max-width: 850px; color: var(--muted); margin-top: 1rem; }
+    .data-section > .scroll-hint { margin-block: 1rem .5rem; }
+    .table-region { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+    table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 2100px; font-size: 1rem; }
+    caption { text-align: left; padding: 1rem; color: var(--muted); }
+    th, td { padding: .9rem 1rem; text-align: left; border-top: 1px solid var(--line); vertical-align: top; }
+    thead th { background: #eeedf4; font-size: 1rem; }
+    tbody th { min-width: 180px; }
+    tbody th { position: sticky; left: 0; background: var(--surface); border-right: 1px solid var(--line); }
+    tbody tr:nth-child(even) > * { background: #fafafc; }
+    tbody tr:target > * { background: var(--tint); border-top: 2px solid var(--link); border-bottom: 2px solid var(--link); }
+    tbody tr:target > th { border-left: 4px solid var(--link); }
+    tbody tr { scroll-margin-block: 2rem; }
+    td:nth-last-child(-n+2), th:nth-last-child(-n+2) { background: #f4f1fc; }
+    .assumptions { padding-block: 2rem; border-bottom: 1px solid var(--line); font-size: 1rem; }
+    .assumptions ul { padding-left: 1.25rem; color: var(--muted); max-width: 950px; }
+    .assumptions li + li { margin-top: .6rem; }
+    .assumptions strong { color: var(--ink); }
+    footer { padding-block: 2rem 3rem; font-size: 1rem; color: var(--muted); }
+    footer p { max-width: 780px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .skip-link { position: absolute; top: .5rem; left: .5rem; transform: translateY(-200%); padding: .5rem 1rem; background: var(--surface); z-index: 2; }
+    .skip-link:focus { transform: none; }
+    @media (forced-colors: active) {
+      .bar { background: Highlight; forced-color-adjust: none; }
+      .bar::after { border-color: CanvasText; background: Canvas; }
+      .track { border-left: 1px solid CanvasText; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <main id="main" tabindex="-1">
+    <section class="hero" aria-labelledby="page-title">
+      <h1 id="page-title">Compare <span>footprints <span aria-hidden="true">👣</span></span></h1>
+      <p class="intro">Compare the estimated carbon footprint of travel, food and digital activities; to put your AI use into perspective.</p>
+      <p class="hero-note">Different activities, explicitly stated quantities. The digital batches are illustrative amounts, not measured averages or scientifically established norms.</p>
+      <a class="jump-link" href="#full-table">See all the numbers <span aria-hidden="true">↘</span></a>
+    </section>
+
+    <!-- Source: REPORT.md, section 1 (D2), compiled 12 November 2026.
+         Keep source cells, chart multipliers, totals, order and bar widths in sync. -->
+    <figure class="chart-card" aria-labelledby="chart-title">
+      <div class="chart-heading">
+        <div class="section-heading">
+          <h2 id="chart-title">The carbon comparison</h2>
+          <span class="scale-tag">One linear scale · from zero</span>
+        </div>
+        <p>Central estimates for the quantities shown. Select any activity to see its full table row.</p>
+        <p class="scroll-hint" id="chart-scroll-hint">↔ Scroll horizontally if needed to explore the full scale. Keyboard: focus the chart and use the arrow keys.</p>
+      </div>
+      <div class="scroll-region" role="region" aria-labelledby="chart-title" aria-describedby="chart-scroll-hint" tabindex="0">
+        <div class="chart">
+          <div class="chart-axis" aria-hidden="true">
+            <span>Activity &amp; quantity</span>
+            <div class="axis-ticks">
+              <span style="left: 0%">0</span><span style="left: 25%">5</span><span style="left: 50%">10</span><span style="left: 75%">15</span><span style="left: 100%">20</span>
+            </div>
+            <span class="axis-unit">kg CO₂e</span>
+          </div>
+          <ol class="chart-list">
+            <li class="chart-row" style="--grams: 17000">
+              <a class="activity-link" href="#activity-petrol"><span class="emoji" aria-hidden="true">⛽️🚗</span><span><span class="activity-name">Petrol car</span><span class="quantity">100 km · 1 occupant</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">17 kg<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: calc(110000 * 100 / 740)">
+              <a class="activity-link" href="#activity-flight"><span class="emoji" aria-hidden="true">✈️</span><span><span class="activity-name">Flight share</span><span class="quantity">100 passenger-km · includes RF</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">≈15 kg<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 7000">
+              <a class="activity-link" href="#activity-burger"><span class="emoji" aria-hidden="true">🍔</span><span><span class="activity-name">Beef burger</span><span class="quantity">1 burger · 113 g patty + bun</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">7 kg<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 5400">
+              <a class="activity-link" href="#activity-ev"><span class="emoji" aria-hidden="true">🔋🚙</span><span><span class="activity-name">Electric car</span><span class="quantity">100 km · 1 occupant · NL grid</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">5.4 kg<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 1500">
+              <a class="activity-link" href="#activity-chicken"><span class="emoji" aria-hidden="true">🍗</span><span><span class="activity-name">Chicken</span><span class="quantity">1 portion · 150 g</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">1.5 kg<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 1200">
+              <a class="activity-link" href="#activity-cheese"><span class="emoji" aria-hidden="true">🧀</span><span><span class="activity-name">Cheese</span><span class="quantity">1 portion · 50 g</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">1.2 kg<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 210">
+              <a class="activity-link" href="#activity-agent-large"><span class="emoji" aria-hidden="true">🦾🦾</span><span><span class="activity-name">Large agent task</span><span class="quantity">1 task · ~1 hour · 100+ tool calls</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">210 g<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 150">
+              <a class="activity-link" href="#activity-parcel"><span class="emoji" aria-hidden="true">📦</span><span><span class="activity-name">Next-day parcel</span><span class="quantity">1 parcel · NL · ~150 km</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">150 g<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 112">
+              <a class="activity-link" href="#activity-computer"><span class="emoji" aria-hidden="true">🧑‍💻</span><span><span class="activity-name">Computer work</span><span class="quantity">8 hours · laptop + monitor</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">112 g<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 100">
+              <a class="activity-link" href="#activity-video"><span class="emoji" aria-hidden="true">📺</span><span><span class="activity-name">Video streaming</span><span class="quantity">2 hours · HD</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">100 g<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 60">
+              <a class="activity-link" href="#activity-teams"><span class="emoji" aria-hidden="true">🧑‍🧑‍🧒‍🧒</span><span><span class="activity-name">Teams + recording</span><span class="quantity">1 hour · 4 people · kept 1 year</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">60 g<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 20">
+              <a class="activity-link" href="#activity-search"><span class="emoji" aria-hidden="true">🔍</span><span><span class="activity-name">Google search</span><span class="quantity">100 queries · no AI</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">20 g<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 18">
+              <a class="activity-link" href="#activity-agent-medium"><span class="emoji" aria-hidden="true">🦾</span><span><span class="activity-name">Medium agent task</span><span class="quantity">1 task · ~10 min · ~20 tool calls</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">18 g<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 12">
+              <a class="activity-link" href="#activity-music"><span class="emoji" aria-hidden="true">🎧</span><span><span class="activity-name">Music streaming</span><span class="quantity">8 hours · smartphone</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">12 g<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 12">
+              <a class="activity-link" href="#activity-chat-query"><span class="emoji" aria-hidden="true">🤖</span><span><span class="activity-name">Chat queries</span><span class="quantity">100 short prompts + answers</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">12 g<span class="sr-only"> CO₂e</span></span>
+            </li>
+            <li class="chart-row" style="--grams: 6">
+              <a class="activity-link" href="#activity-ci"><span class="emoji" aria-hidden="true">🗄️</span><span><span class="activity-name">GitHub Actions CI</span><span class="quantity">10 × 5-minute runs · Linux CPU</span><span class="sr-only"> — view table row</span></span></a>
+              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">6 g<span class="sr-only"> CO₂e</span></span>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <figcaption>
+        <p><strong>Read the scale, not just the rank.</strong> All bars start at zero on the same kg CO₂e scale, using fixed quantities. The <span class="marker-key" aria-hidden="true"></span> endpoint rings locate small values; they do not add to bar length. Tiny bars are genuinely tiny at this scale.</p>
+        <p>These are central estimates with low–high ranges in the table below. Only differences of about <strong>10× or more</strong> are meaningful; differences of 2× can be within uncertainty. This compares different activities, not interchangeable services.</p>
+      </figcaption>
+    </figure>
+
+    <aside class="context-note" aria-label="Transport comparison explained">
+      <strong>Why 100 km?</strong> Cars show one tenth of the report's ~1,000 km trip
+      (one occupant). Flying shows a 100 passenger-km share of the Amsterdam–Geneva
+      estimate: 110 kg × 100 / 740 km ≈ 15 kg, including non-CO₂ effects
+      (radiative forcing, RF). This is an allocation of that route's footprint,
+      not a real 100 km flight or a prediction for other routes.
+    </aside>
+
+    <section id="full-table" class="data-section" aria-labelledby="table-title" tabindex="-1">
+      <p class="eyebrow">The detail behind the bars</p>
+      <h2 id="table-title">All the numbers, in context.</h2>
+      <p>The original nine report columns are <strong>per report unit</strong>, including energy and chat-query equivalents. Only the last two columns describe the chart quantities and their scaled carbon totals. Original trip values are preserved.</p>
+      <p class="scroll-hint" id="table-scroll-hint">↔ Scroll to see all 11 columns. Keyboard: focus the table region and use the arrow keys.</p>
+      <div class="scroll-region table-region" role="region" aria-labelledby="table-title" aria-describedby="table-scroll-hint" tabindex="0">
+        <table>
+          <caption>Report summary (D2) · 12 November 2026 · H = high, M = medium, L = low confidence. Chat-query equivalents = CO₂e ÷ 0.12 g.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Item</th><th scope="col">Functional unit</th><th scope="col">CO₂e central</th><th scope="col">CO₂e range</th><th scope="col">Final energy</th><th scope="col">Primary energy</th><th scope="col">Order of magnitude<br>(g / Wh primary)</th><th scope="col">🤖-equiv.</th><th scope="col">Conf.</th><th scope="col">Chart quantity<br>(report units)</th><th scope="col">Chart CO₂e total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="activity-petrol">
+              <th scope="row">⛽️🚗 Petrol car</th><td>1 car, ~1,000 km AMS→GVA, 1 occupant</td><td><strong>170 kg</strong></td><td>130–210 kg</td><td>620 kWh</td><td>740 kWh</td><td>10⁵ / 10⁶</td><td>~1,400,000</td><td>H</td><td>0.1 × trip (100 km)</td><td>17 kg</td>
+            </tr>
+            <tr id="activity-flight">
+              <th scope="row">✈️ Flight</th><td>1 pax, AMS→GVA one way (incl. RF)</td><td><strong>110 kg</strong> (60 kg excl. RF)</td><td>70–150 kg</td><td>230 kWh</td><td>280 kWh</td><td>10⁵ / 10⁵</td><td>~900,000</td><td>H</td><td>100/740 × passenger trip (100 passenger-km share)</td><td>≈15 kg</td>
+            </tr>
+            <tr id="activity-ev">
+              <th scope="row">🔋🚙 EV</th><td>1 car, ~1,000 km, NL grid</td><td><strong>54 kg</strong></td><td>45–70 kg</td><td>180 kWh</td><td>340 kWh</td><td>10⁴ / 10⁵</td><td>~450,000</td><td>H</td><td>0.1 × trip (100 km, 1 occupant)</td><td>5.4 kg</td>
+            </tr>
+            <tr id="activity-burger">
+              <th scope="row">🍔 Beef burger</th><td>1 burger (113 g patty + bun)</td><td><strong>7 kg</strong></td><td>4–12 kg</td><td>—</td><td>1.5 kWh (CED)</td><td>10⁴ / 10³</td><td>~58,000</td><td>M</td><td>1 × burger</td><td>7 kg</td>
+            </tr>
+            <tr id="activity-chicken">
+              <th scope="row">🍗 Chicken</th><td>1 portion (150 g)</td><td><strong>1.5 kg</strong></td><td>0.9–2.2 kg</td><td>—</td><td>1.0 kWh (CED)</td><td>10³ / 10³</td><td>~12,500</td><td>M</td><td>1 × portion</td><td>1.5 kg</td>
+            </tr>
+            <tr id="activity-cheese">
+              <th scope="row">🧀 Cheese</th><td>1 portion (50 g)</td><td><strong>1.2 kg</strong></td><td>0.5–1.5 kg</td><td>—</td><td>0.7 kWh (CED)</td><td>10³ / 10³</td><td>~10,000</td><td>M</td><td>1 × portion</td><td>1.2 kg</td>
+            </tr>
+            <tr id="activity-agent-large">
+              <th scope="row">🦾🦾 Agent task, large</th><td>~1 h, 100+ tool calls, ~10 M tokens</td><td><strong>210 g</strong></td><td>70–600 g</td><td>545 Wh</td><td>1,040 Wh</td><td>10² / 10³</td><td>~1,750</td><td>L</td><td>1 × task</td><td>210 g</td>
+            </tr>
+            <tr id="activity-parcel">
+              <th scope="row">📦 Parcel, next-day</th><td>1 parcel, NL, ~150 km</td><td><strong>150 g</strong></td><td>80–350 g</td><td>780 Wh</td><td>1,000 Wh</td><td>10² / 10³</td><td>~1,250</td><td>M</td><td>1 × parcel</td><td>150 g</td>
+            </tr>
+            <tr id="activity-teams">
+              <th scope="row">🧑‍🧑‍🧒‍🧒 Teams + recording</th><td>1 meeting-hour, 4 people, recording kept 1 yr</td><td><strong>60 g</strong> (≈15 g/person)</td><td>40–400 g</td><td>200 Wh</td><td>380 Wh</td><td>10¹–10² / 10²</td><td>~500</td><td>L</td><td>1 × meeting-hour</td><td>60 g</td>
+            </tr>
+            <tr id="activity-video">
+              <th scope="row">📺 Video streaming</th><td>1 hour, HD</td><td><strong>50 g</strong></td><td>20–100 g</td><td>100 Wh</td><td>190 Wh</td><td>10¹ / 10²</td><td>~420</td><td>M</td><td>2 × hour</td><td>100 g</td>
+            </tr>
+            <tr id="activity-agent-medium">
+              <th scope="row">🦾 Agent task, medium</th><td>~10 min, ~20 tool calls, ~600k tokens</td><td><strong>18 g</strong></td><td>6–50 g</td><td>48 Wh</td><td>90 Wh</td><td>10¹ / 10²</td><td>~150</td><td>L</td><td>1 × task</td><td>18 g</td>
+            </tr>
+            <tr id="activity-computer">
+              <th scope="row">🧑‍💻 Computer work</th><td>1 hour, laptop + monitor</td><td><strong>14 g</strong></td><td>8–27 g</td><td>45 Wh</td><td>86 Wh</td><td>10¹ / 10²</td><td>~115</td><td>H</td><td>8 × hour</td><td>112 g</td>
+            </tr>
+            <tr id="activity-music">
+              <th scope="row">🎧 Music streaming</th><td>1 hour, smartphone</td><td><strong>1.5 g</strong></td><td>0.5–8 g</td><td>5 Wh</td><td>10 Wh</td><td>10⁰ / 10¹</td><td>~12</td><td>L</td><td>8 × hour</td><td>12 g</td>
+            </tr>
+            <tr id="activity-ci">
+              <th scope="row">🗄️ GitHub Actions CI</th><td>5 min, Linux runner, CPU only</td><td><strong>0.6 g</strong></td><td>0.2–1.6 g</td><td>1.5 Wh</td><td>2.9 Wh</td><td>10⁰ / 10⁰</td><td>~5</td><td>M</td><td>10 × run (5 min each)</td><td>6 g</td>
+            </tr>
+            <tr id="activity-search">
+              <th scope="row">🔍 Google search</th><td>1 query, no AI</td><td><strong>0.2 g</strong></td><td>0.05–0.5 g</td><td>0.3 Wh</td><td>0.6 Wh</td><td>10⁻¹ / 10⁰</td><td>~2</td><td>L (2009 data)</td><td>100 × query</td><td>20 g</td>
+            </tr>
+            <tr id="activity-chat-query">
+              <th scope="row">🤖 Chat query</th><td>1 short prompt + answer</td><td><strong>0.12 g</strong></td><td>0.03–0.4 g</td><td>0.3 Wh</td><td>0.6 Wh</td><td>10⁻¹ / 10⁰</td><td>1</td><td>M</td><td>100 × query</td><td>12 g</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="assumptions">
+        <h3>Three assumptions worth knowing</h3>
+        <ul>
+          <li><strong>Grid:</strong> NL 300 g CO₂e/kWh for home, office, EV and warehouses; data centres 400 g CO₂e/kWh (global average, location-based).</li>
+          <li><strong>Primary energy:</strong> electricity × 1.9; fuels × 1.2 (well-to-tank uplift). Food energy is cumulative energy demand (CED), which is already primary.</li>
+          <li><strong>Flight:</strong> non-CO₂ effects (radiative forcing, RF) are included in the table (DESNZ method, ~1.9×); the value without RF is in brackets.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>An order-of-magnitude comparison. Perspective, not precision.</strong></p>
+    <p>Compiled 12 Nov 2026</p>
+    <p>These figures are rough, AI-assisted (!) estimates intended to put orders of magnitude in perspective, not precise measurements. Read the <a href="https://github.com/elwinschmitz/compare-footprints/blob/main/REPORT.md">full report</a> for calculations, sources, assumptions and limitations.</p>
+    <p>Embodied emissions of devices, vehicles, servers and buildings are excluded. Some sources remain unverified, as documented in the report.</p>
+  </footer>
+</body>
+</html>
