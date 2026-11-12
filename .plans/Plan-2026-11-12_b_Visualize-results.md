@@ -226,4 +226,9 @@ these quantities.
   notes, table content and footer copy. Supporting information should not look
   like fine print; distinguish it through spacing, weight and colour instead.
 - Footer tagline: "An order-of-magnitude comparison. Perspective, not precision."
+- After the initial page is ready, add a short footer paragraph estimating energy
+  for the whole logged AI session, including planning and revisions. Use recorded
+  token counts and the report's per-token method as a clearly labelled proxy,
+  with an uncertainty range, snapshot time and exclusions. Do not present it as
+  metered or model-specific energy; local devices and tool execution are excluded.
 
