@@ -10,7 +10,7 @@
 
 This repository puts the footprint of AI-use into perspective by comparing it with familiar activities. The report offers _rough estimates_ as a conversation starter; It is not a clear conclusion of thorough research. (The research is done by the AI itself, so _caveat emptor_. etc..)
 
-The static visual comparison puts all activities on one linear carbon-footprint chart, with explicit quantities and the full numerical table. It needs no build or dependencies. An interactive comparison tool may follow.
+The static visual comparison puts food, deliveries and digital activities on one linear carbon-footprint chart, with one beef burger as its largest comparator. Travel stays in a separate side note and the full numerical table. It needs no build or dependencies. An interactive comparison tool may follow.
 
 ---
 

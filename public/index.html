@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="An order-of-magnitude comparison of the carbon footprints of travel, food and digital activities, with transparent quantities and the full report data.">
+  <meta name="description" content="Compare the carbon footprints of food, deliveries and digital activities on a burger-sized scale, with travel for context and the full report data.">
   <title>Compare footprints — Everyday activities &amp; AI</title>
   <link rel="icon" href="data:,">
   <style>
@@ -91,10 +91,10 @@
       display: flex;
       align-items: center;
       border-right: 1px solid var(--line);
-      background: repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px 25%);
+      background: repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px calc(100% / 7));
     }
-    /* A 20 kg axis; endpoint rings locate tiny values without enlarging their bars. */
-    .bar { position: relative; width: calc(var(--grams) / 200 * 1%); height: 22px; background: var(--accent); border-radius: 0 4px 4px 0; }
+    /* A 7 kg axis; endpoint rings locate tiny values without enlarging their bars. */
+    .bar { position: relative; width: calc(var(--grams) / 70 * 1%); height: 22px; background: var(--accent); border-radius: 0 4px 4px 0; }
     .bar::after { content: ""; position: absolute; right: -3px; top: 8px; width: 6px; height: 6px; border: 1.5px solid var(--link); border-radius: 50%; background: var(--surface); }
     .chart-value { position: relative; align-self: center; text-align: right; font-weight: 650; font-size: 1rem; font-variant-numeric: tabular-nums; }
     figcaption { padding: 1.25rem 1rem 1.75rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 1rem; }
@@ -137,7 +137,7 @@
   <main id="main" tabindex="-1">
     <section class="hero" aria-labelledby="page-title">
       <h1 id="page-title">Compare <span>footprints <span aria-hidden="true">👣</span></span></h1>
-      <p class="intro">Compare the estimated carbon footprint of travel, food and digital activities; to put your AI use into perspective.</p>
+      <p class="intro">Compare the estimated carbon footprint of food, deliveries and digital activities to put your AI use into perspective. Find travel context in the side note and full table below.</p>
       <p class="hero-note">Different activities, explicitly stated quantities. The digital batches are illustrative amounts, not measured averages or scientifically established norms.</p>
       <a class="jump-link" href="#full-table">See all the numbers <span aria-hidden="true">↘</span></a>
     </section>
@@ -150,7 +150,7 @@
           <h2 id="chart-title">The carbon comparison</h2>
           <span class="scale-tag">One linear scale · from zero</span>
         </div>
-        <p>Central estimates for the quantities shown. Select any activity to see its full table row.</p>
+        <p>Food, deliveries and digital activities, with one beef burger as the largest comparator at 7 kg CO₂e. Central estimates for the quantities shown; select any activity to see its full table row.</p>
         <p class="scroll-hint" id="chart-scroll-hint">↔ Scroll horizontally if needed to explore the full scale. Keyboard: focus the chart and use the arrow keys.</p>
       </div>
       <div class="scroll-region" role="region" aria-labelledby="chart-title" aria-describedby="chart-scroll-hint" tabindex="0">
@@ -158,26 +158,21 @@
           <div class="chart-axis" aria-hidden="true">
             <span>Activity &amp; quantity</span>
             <div class="axis-ticks">
-              <span style="left: 0%">0</span><span style="left: 25%">5</span><span style="left: 50%">10</span><span style="left: 75%">15</span><span style="left: 100%">20</span>
+              <span style="left: 0%">0</span>
+              <span style="left: calc(100% / 7)">1</span>
+              <span style="left: calc(100% * 2 / 7)">2</span>
+              <span style="left: calc(100% * 3 / 7)">3</span>
+              <span style="left: calc(100% * 4 / 7)">4</span>
+              <span style="left: calc(100% * 5 / 7)">5</span>
+              <span style="left: calc(100% * 6 / 7)">6</span>
+              <span style="left: 100%">7</span>
             </div>
             <span class="axis-unit">kg CO₂e</span>
           </div>
           <ol class="chart-list">
-            <li class="chart-row" style="--grams: 17000">
-              <a class="activity-link" href="#activity-petrol"><span class="emoji" aria-hidden="true">⛽️🚗</span><span><span class="activity-name">Petrol car</span><span class="quantity">100 km · 1 occupant</span><span class="sr-only"> — view table row</span></span></a>
-              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">17 kg<span class="sr-only"> CO₂e</span></span>
-            </li>
-            <li class="chart-row" style="--grams: calc(110000 * 100 / 740)">
-              <a class="activity-link" href="#activity-flight"><span class="emoji" aria-hidden="true">✈️</span><span><span class="activity-name">Flight share</span><span class="quantity">100 passenger-km · includes RF</span><span class="sr-only"> — view table row</span></span></a>
-              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">≈15 kg<span class="sr-only"> CO₂e</span></span>
-            </li>
             <li class="chart-row" style="--grams: 7000">
               <a class="activity-link" href="#activity-burger"><span class="emoji" aria-hidden="true">🍔</span><span><span class="activity-name">Beef burger</span><span class="quantity">1 burger · 113 g patty + bun</span><span class="sr-only"> — view table row</span></span></a>
               <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">7 kg<span class="sr-only"> CO₂e</span></span>
-            </li>
-            <li class="chart-row" style="--grams: 5400">
-              <a class="activity-link" href="#activity-ev"><span class="emoji" aria-hidden="true">🔋🚙</span><span><span class="activity-name">Electric car</span><span class="quantity">100 km · 1 occupant · NL grid</span><span class="sr-only"> — view table row</span></span></a>
-              <div class="track" aria-hidden="true"><div class="bar"></div></div><span class="chart-value">5.4 kg<span class="sr-only"> CO₂e</span></span>
             </li>
             <li class="chart-row" style="--grams: 1500">
               <a class="activity-link" href="#activity-chicken"><span class="emoji" aria-hidden="true">🍗</span><span><span class="activity-name">Chicken</span><span class="quantity">1 portion · 150 g</span><span class="sr-only"> — view table row</span></span></a>
@@ -236,18 +231,19 @@
       </figcaption>
     </figure>
 
-    <aside class="context-note" aria-label="Transport comparison explained">
-      <strong>Why 100 km?</strong> Cars show one tenth of the report's ~1,000 km trip
-      (one occupant). Flying shows a 100 passenger-km share of the Amsterdam–Geneva
-      estimate: 110 kg × 100 / 740 km ≈ 15 kg, including non-CO₂ effects
-      (radiative forcing, RF). This is an allocation of that route's footprint,
-      not a real 100 km flight or a prediction for other routes.
+    <aside class="context-note" aria-label="Burger-to-flight emissions comparison">
+      <strong>A burger, in travel perspective.</strong> One
+      <a href="#activity-burger">beef burger</a> is estimated at 7 kg CO₂e,
+      about 6% of one passenger's one-way
+      <a href="#activity-flight">Amsterdam–Geneva flight</a>
+      (110 kg CO₂e, including non-CO₂ effects). That flight is roughly 16 burgers'
+      worth of emissions. Travel stays in the full table, not in this chart.
     </aside>
 
     <section id="full-table" class="data-section" aria-labelledby="table-title" tabindex="-1">
       <p class="eyebrow">The detail behind the bars</p>
       <h2 id="table-title">All the numbers, in context.</h2>
-      <p>The original nine report columns are <strong>per report unit</strong>, including energy and chat-query equivalents. Only the last two columns describe the chart quantities and their scaled carbon totals. Original trip values are preserved.</p>
+      <p>The original nine report columns are <strong>per report unit</strong>, including energy and chat-query equivalents. The last two columns apply only to charted activities and describe their quantities and scaled carbon totals. Transport is retained for context, with original full-trip values, but is not charted.</p>
       <p class="scroll-hint" id="table-scroll-hint">↔ Scroll to see all 11 columns. Keyboard: focus the table region and use the arrow keys.</p>
       <div class="scroll-region table-region" role="region" aria-labelledby="table-title" aria-describedby="table-scroll-hint" tabindex="0">
         <table>
@@ -259,13 +255,13 @@
           </thead>
           <tbody>
             <tr id="activity-petrol">
-              <th scope="row">⛽️🚗 Petrol car</th><td>1 car, ~1,000 km AMS→GVA, 1 occupant</td><td><strong>170 kg</strong></td><td>130–210 kg</td><td>620 kWh</td><td>740 kWh</td><td>10⁵ / 10⁶</td><td>~1,400,000</td><td>H</td><td>0.1 × trip (100 km)</td><td>17 kg</td>
+              <th scope="row">⛽️🚗 Petrol car</th><td>1 car, ~1,000 km AMS→GVA, 1 occupant</td><td><strong>170 kg</strong></td><td>130–210 kg</td><td>620 kWh</td><td>740 kWh</td><td>10⁵ / 10⁶</td><td>~1,400,000</td><td>H</td><td>Not charted</td><td>—</td>
             </tr>
             <tr id="activity-flight">
-              <th scope="row">✈️ Flight</th><td>1 pax, AMS→GVA one way (incl. RF)</td><td><strong>110 kg</strong> (60 kg excl. RF)</td><td>70–150 kg</td><td>230 kWh</td><td>280 kWh</td><td>10⁵ / 10⁵</td><td>~900,000</td><td>H</td><td>100/740 × passenger trip (100 passenger-km share)</td><td>≈15 kg</td>
+              <th scope="row">✈️ Flight</th><td>1 pax, AMS→GVA one way (incl. RF)</td><td><strong>110 kg</strong> (60 kg excl. RF)</td><td>70–150 kg</td><td>230 kWh</td><td>280 kWh</td><td>10⁵ / 10⁵</td><td>~900,000</td><td>H</td><td>Not charted</td><td>—</td>
             </tr>
             <tr id="activity-ev">
-              <th scope="row">🔋🚙 EV</th><td>1 car, ~1,000 km, NL grid</td><td><strong>54 kg</strong></td><td>45–70 kg</td><td>180 kWh</td><td>340 kWh</td><td>10⁴ / 10⁵</td><td>~450,000</td><td>H</td><td>0.1 × trip (100 km, 1 occupant)</td><td>5.4 kg</td>
+              <th scope="row">🔋🚙 EV</th><td>1 car, ~1,000 km, NL grid</td><td><strong>54 kg</strong></td><td>45–70 kg</td><td>180 kWh</td><td>340 kWh</td><td>10⁴ / 10⁵</td><td>~450,000</td><td>H</td><td>Not charted</td><td>—</td>
             </tr>
             <tr id="activity-burger">
               <th scope="row">🍔 Beef burger</th><td>1 burger (113 g patty + bun)</td><td><strong>7 kg</strong></td><td>4–12 kg</td><td>—</td><td>1.5 kWh (CED)</td><td>10⁴ / 10³</td><td>~58,000</td><td>M</td><td>1 × burger</td><td>7 kg</td>
