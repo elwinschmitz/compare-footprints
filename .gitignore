@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+._*
+Icon
+# Windows
+Thumbs.db
+[Dd]esktop.ini
+# Linux
+*~
+.fuse_hidden*
+.nfs*
+
+# Local .env
+.env*
